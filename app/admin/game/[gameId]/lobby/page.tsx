@@ -83,7 +83,7 @@ export default function PerGameLobby() {
               <div className="text-5xl mb-3">☠️</div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Kill Game?</h2>
               <p className="text-gray-600 text-sm">
-                This will immediately end the game and mark it as <strong>completed</strong>. 
+                This will immediately end the game and mark it as <strong>completed</strong>.
                 This action <strong>cannot be undone</strong>.
               </p>
             </div>
