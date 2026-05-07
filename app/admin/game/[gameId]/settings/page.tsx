@@ -154,7 +154,7 @@ export default function PerGameSettings() {
             </div>
           )}
           {activeTab === 'customers' && !isPriceWar && <CustomerDataManagement gameId={gameId} />}
-          {activeTab === 'reports' && <ExportReports gameId={gameId} />}
+          {activeTab === 'reports' && <ExportReports gameId={gameId} gameType={gameType} />}
         </div>
       </div>
     </div>
