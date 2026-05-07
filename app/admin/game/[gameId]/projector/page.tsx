@@ -196,9 +196,10 @@ export default function ProjectorPage() {
     <div className="min-h-screen bg-gray-950 text-white flex flex-col select-none overflow-hidden" style={{ fontFamily: 'system-ui, sans-serif' }}>
 
       {/* Top bar */}
-      <div className="flex items-center justify-between px-10 py-5 border-b border-gray-800 shrink-0">
-        <div className="flex items-center gap-5">
-          <Image src="/logo-black-bg.png" alt="InnoQuest" width={56} height={56} className="rounded-xl shrink-0" />
+      <div className="relative flex items-center justify-between px-10 py-5 border-b border-gray-800 shrink-0">
+        {/* Left: game name */}
+        <div className="flex items-center gap-4 z-10">
+          <span className="text-4xl">⚔️</span>
           <div>
             <h1 className="text-3xl font-black tracking-wide leading-tight">{gameName || 'Price War'}</h1>
             {gameStatus === 'completed' && (
@@ -206,7 +207,12 @@ export default function ProjectorPage() {
             )}
           </div>
         </div>
-        <div className="text-right">
+        {/* Center: large logo */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/logo_white.PNG" alt="InnoQuest" width={240} height={120} className="object-contain" />
+        </div>
+        {/* Right: round counter */}
+        <div className="text-right z-10">
           <p className="text-7xl font-black tabular-nums leading-none">
             {currentRound}<span className="text-gray-600 text-5xl font-light"> / {totalRounds}</span>
           </p>
@@ -264,13 +270,12 @@ export default function ProjectorPage() {
             {teams.map((t) => (
               <div
                 key={t.team_id}
-                className={`flex items-center justify-between px-5 py-4 rounded-2xl border transition-all duration-300 ${
-                  t.calculated
+                className={`flex items-center justify-between px-5 py-4 rounded-2xl border transition-all duration-300 ${t.calculated
                     ? 'border-blue-500/40 bg-blue-500/10'
                     : t.submitted
-                    ? 'border-green-500/40 bg-green-500/10'
-                    : 'border-gray-700 bg-gray-900'
-                }`}
+                      ? 'border-green-500/40 bg-green-500/10'
+                      : 'border-gray-700 bg-gray-900'
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">
@@ -317,13 +322,12 @@ export default function ProjectorPage() {
               return (
                 <div
                   key={t.team_id}
-                  className={`grid grid-cols-[2.5rem_1fr_1fr_1fr_1fr] gap-3 items-center px-4 py-5 rounded-2xl border transition-all duration-500 ${
-                    hasResult && isRevealed
+                  className={`grid grid-cols-[2.5rem_1fr_1fr_1fr_1fr] gap-3 items-center px-4 py-5 rounded-2xl border transition-all duration-500 ${hasResult && isRevealed
                       ? i === 0
                         ? 'border-yellow-500/40 bg-yellow-500/8'
                         : 'border-gray-700 bg-gray-900'
                       : 'border-gray-800 bg-gray-900/50'
-                  }`}
+                    }`}
                   style={{
                     opacity: !hasResult ? 0.6 : 1,
                     transform: hasResult && isRevealed ? 'scale(1)' : hasResult ? 'scale(0.98)' : 'scale(1)',
@@ -337,17 +341,15 @@ export default function ProjectorPage() {
                     {hasResult && isRevealed ? fmt(t.price_set) : '—'}
                   </span>
 
-                  <span className={`text-right text-2xl font-black tabular-nums transition-all duration-300 ${
-                    !hasResult || !isRevealed ? 'text-gray-700' :
-                    (t.round_profit ?? 0) >= 0 ? 'text-green-400' : 'text-red-400'
-                  }`}>
+                  <span className={`text-right text-2xl font-black tabular-nums transition-all duration-300 ${!hasResult || !isRevealed ? 'text-gray-700' :
+                      (t.round_profit ?? 0) >= 0 ? 'text-green-400' : 'text-red-400'
+                    }`}>
                     {hasResult && isRevealed ? fmtProfit(t.round_profit) : '—'}
                   </span>
 
-                  <span className={`text-right text-2xl font-black tabular-nums transition-all duration-300 ${
-                    t.cumulative_profit == null ? 'text-gray-600' :
-                    t.cumulative_profit >= 0 ? 'text-green-300' : 'text-red-300'
-                  }`}>
+                  <span className={`text-right text-2xl font-black tabular-nums transition-all duration-300 ${t.cumulative_profit == null ? 'text-gray-600' :
+                      t.cumulative_profit >= 0 ? 'text-green-300' : 'text-red-300'
+                    }`}>
                     {t.cumulative_profit != null ? fmtProfit(t.cumulative_profit) : '—'}
                   </span>
                 </div>
