@@ -72,7 +72,9 @@ export default function StudentLoginPage() {
       sessionStorage.setItem('game_type', gameType)
 
       // Route to the correct game-type-specific path
-      if (gameStatus === 'active') {
+      if (gameStatus === 'summary') {
+        window.location.href = `/student/${gameType}/result`
+      } else if (gameStatus === 'active') {
         window.location.href = `/student/${gameType}/gameplay`
       } else {
         window.location.href = `/student/${gameType}/lobby`
