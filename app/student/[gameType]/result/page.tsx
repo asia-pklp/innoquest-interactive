@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import ResultPage from '@/app/student/result/page'
+import PriceWarResult from '@/components/student/price-war-result'
 
 export default function StudentResultTyped() {
   const params = useParams()
@@ -23,6 +24,8 @@ export default function StudentResultTyped() {
       </div>
     )
   }
+
+  if (gameType === 'price_war') return <PriceWarResult />
 
   return <ResultPage />
 }
