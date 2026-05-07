@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -196,8 +197,8 @@ export default function ProjectorPage() {
 
       {/* Top bar */}
       <div className="flex items-center justify-between px-10 py-5 border-b border-gray-800 shrink-0">
-        <div className="flex items-center gap-4">
-          <span className="text-4xl">⚔️</span>
+        <div className="flex items-center gap-5">
+          <Image src="/logo-black-bg.png" alt="InnoQuest" width={56} height={56} className="rounded-xl shrink-0" />
           <div>
             <h1 className="text-3xl font-black tracking-wide leading-tight">{gameName || 'Price War'}</h1>
             {gameStatus === 'completed' && (
