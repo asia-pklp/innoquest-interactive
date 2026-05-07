@@ -21,7 +21,7 @@ export default function StudentLoginPage() {
 
       const { data: team, error: teamError } = await supabase
         .from('teams')
-        .select('team_id, team_name, game_id, username, password_hash')
+        .select('team_id, team_name, game_id, username, password_hash, game_settings!inner(game_status)')
         .eq('username', username)
         .eq('password_hash', password)
         .single()

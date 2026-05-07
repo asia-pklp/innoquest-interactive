@@ -73,6 +73,8 @@ export default function AdminDashboard() {
     if (!window.confirm(`Delete "${gameName}" permanently? This cannot be undone.`)) return
     setDeletingId(gameId)
     const supabase = createClient()
+    await supabase.from('weekly_results').delete().eq('game_id', gameId)
+    await supabase.from('teams').delete().eq('game_id', gameId)
     await supabase.from('game_settings').delete().eq('game_id', gameId)
     setGames((prev) => prev.filter((g) => g.game_id !== gameId))
     setDeletingId(null)
