@@ -14,7 +14,11 @@ interface GameSettings {
   pause_timestamp?: string
 }
 
-export default function WeekProgression() {
+interface WeekProgressionProps {
+  gameId?: string
+}
+
+export default function WeekProgression({ gameId = '00000000-0000-0000-0000-000000000001' }: WeekProgressionProps) {
   const supabase = createClient()
   const [loading, setLoading] = useState(false)
   const [advancing, setAdvancing] = useState(false)
@@ -29,7 +33,6 @@ export default function WeekProgression() {
     is_paused: false,
     pause_timestamp: undefined
   })
-  const gameId = '00000000-0000-0000-0000-000000000001'
 
   useEffect(() => {
     loadGameSettings()

@@ -18,11 +18,11 @@ export default function ResultPage() {
   const [teamData, setTeamData] = useState<TeamResult | null>(null)
   const [allTeams, setAllTeams] = useState<TeamResult[]>([])
   const [loading, setLoading] = useState(true)
-  const gameId = '00000000-0000-0000-0000-000000000001'
 
   useEffect(() => {
     const loadResults = async () => {
       const teamId = sessionStorage.getItem('team_id')
+      const gameId = sessionStorage.getItem('game_id') ?? '00000000-0000-0000-0000-000000000001'
       
       if (!teamId) {
         router.push('/student/login')

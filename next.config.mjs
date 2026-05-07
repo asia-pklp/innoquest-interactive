@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Remove 'standalone' output for Vercel - Vercel handles Next.js deployments natively
-  // output: 'standalone',
+  // Only enable 'standalone' output when explicitly requested (e.g., in Docker build)
+  // This ensures Vercel deployments remain unaffected.
+  output: process.env.BUILD_STANDALONE === 'true' ? 'standalone' : undefined,
   typescript: {
     ignoreBuildErrors: true, // Temporarily true to allow deployment, but demand display should work now
   },

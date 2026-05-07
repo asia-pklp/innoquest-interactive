@@ -16,9 +16,12 @@ interface GameSettings {
   total_weeks: number
 }
 
-export default function LobbyControl() {
+interface LobbyControlProps {
+  gameId?: string
+}
+
+export default function LobbyControl({ gameId = '00000000-0000-0000-0000-000000000001' }: LobbyControlProps) {
   const supabase = createClient()
-  const gameId = '00000000-0000-0000-0000-000000000001'
   
   const [players, setPlayers] = useState<PlayerStatus[]>([])
   const [gameSettings, setGameSettings] = useState<GameSettings | null>(null)

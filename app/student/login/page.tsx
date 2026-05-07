@@ -19,7 +19,6 @@ export default function StudentLoginPage() {
     try {
       const supabase = createClient()
 
-      // Query teams table to find matching username AND password
       const { data: team, error: teamError } = await supabase
         .from('teams')
         .select('team_id, team_name, game_id, username, password_hash')
@@ -33,40 +32,34 @@ export default function StudentLoginPage() {
         return
       }
 
-      // Update last_activity to track login
       await supabase
         .from('teams')
-        .update({ 
-          last_activity: new Date().toISOString(),
-          is_active: true 
-        })
+        .update({ last_activity: new Date().toISOString(), is_active: true })
         .eq('team_id', team.team_id)
 
-      // Login successful - show welcome message
       alert(`Hello ${team.team_name}! Welcome to InnoQuest.`)
 
-      // Create session by storing team info
-      sessionStorage.setItem('team_id', team.team_id)
-      sessionStorage.setItem('team_name', team.team_name)
-      sessionStorage.setItem('game_id', team.game_id)
-
-      // Check game status to determine where to redirect
-      const { data: gameSettings, error: gameError } = await supabase
+      // Fetch game settings including game_type
+      const { data: gameSettings } = await supabase
         .from('game_settings')
-        .select('game_status')
+        .select('game_status, game_type')
         .eq('game_id', team.game_id)
         .single()
 
-      if (gameError) {
-        // Silently handle error - redirect to lobby as fallback
-      }
+      const gameType = gameSettings?.game_type ?? 'startup_simulation'
+      const gameStatus = gameSettings?.game_status ?? 'setup'
 
-      // Redirect based on game status
-      if (gameSettings?.game_status === 'active') {
-        window.location.href = '/student/gameplay'
+      // Persist session
+      sessionStorage.setItem('team_id', team.team_id)
+      sessionStorage.setItem('team_name', team.team_name)
+      sessionStorage.setItem('game_id', team.game_id)
+      sessionStorage.setItem('game_type', gameType)
+
+      // Route to the correct game-type-specific path
+      if (gameStatus === 'active') {
+        window.location.href = `/student/${gameType}/gameplay`
       } else {
-        // Game in lobby or not started yet
-        window.location.href = '/student/lobby'
+        window.location.href = `/student/${gameType}/lobby`
       }
     } catch (err) {
       setError('Login failed. Please try again.')
@@ -79,9 +72,7 @@ export default function StudentLoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-background to-gray-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">
-            Student Login
-          </h1>
+          <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">Student Login</h1>
           <p className="text-gray-600">Enter your team credentials</p>
         </div>
 
@@ -122,11 +113,7 @@ export default function StudentLoginPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="btn-primary w-full"
-            disabled={loading}
-          >
+          <button type="submit" className="btn-primary w-full" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>

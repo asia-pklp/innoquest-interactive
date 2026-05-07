@@ -16,12 +16,11 @@ import LobbyControl from './lobby-control'
 
 interface AdminDashboardProps {
   onBack: () => void
+  gameId?: string
 }
 
-export default function AdminDashboard({ onBack }: AdminDashboardProps) {
+export default function AdminDashboard({ onBack, gameId = '00000000-0000-0000-0000-000000000001' }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState('overview')
-  // Use a fixed UUID for the default game session
-  const gameId = '00000000-0000-0000-0000-000000000001'
   // Add refresh trigger for teams management
   const [refreshTeams, setRefreshTeams] = useState(0)
 

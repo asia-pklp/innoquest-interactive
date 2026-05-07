@@ -54,6 +54,22 @@ export default function RootLayout({
           {children}
         </GameProvider>
         <Analytics />
+        <footer style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          textAlign: 'center',
+          padding: '8px 16px',
+          fontSize: '11px',
+          color: '#9CA3AF',
+          backgroundColor: 'rgba(255,255,255,0.85)',
+          backdropFilter: 'blur(4px)',
+          borderTop: '1px solid rgba(0,0,0,0.06)',
+          zIndex: 50,
+        }}>
+          © Copyright, Confidential, Proprietary to InnoQuest Gamification Labs 2026.
+        </footer>
       </body>
     </html>
   )

@@ -12,30 +12,28 @@ export default function Home() {
             <div className="inline-flex items-center justify-center w-32 h-32 bg-linear-to-br from-white to-[#f8f9fa] rounded-full shadow-lg" style={{
               boxShadow: '0 10px 30px rgba(230, 57, 70, 0.2), 0 0 0 2px rgba(230, 57, 70, 0.1)'
             }}>
-              <Image 
-                src="/logo.png" 
-                alt="InnoQuest" 
-                width={120} 
-                height={120} 
-                className="rounded-full transition-transform duration-300 hover:scale-105" 
+              <Image
+                src="/logo.png"
+                alt="InnoQuest"
+                width={120}
+                height={120}
+                className="rounded-full transition-transform duration-300 hover:scale-105"
                 style={{
                   width: '120px',
                   height: '120px',
                   boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1)',
                   objectFit: 'cover'
                 }}
-                priority 
+                priority
               />
             </div>
           </div>
-          <div className="text-sm text-gray-600 font-medium">
-            Startup Odyssey
-          </div>
+
         </div>
 
         <div className="text-center mb-8">
           <h1 className="font-['Poppins'] font-bold text-[28px] text-black mb-2">
-            Welcome Back
+            Welcome to<br />InnoQuest Labs Interactive
           </h1>
           <p className="text-base text-gray-600 font-medium">
             Launch your startup journey
@@ -65,18 +63,18 @@ export default function Home() {
   )
 }
 
-        //       /| _ ╱|、  
-        //      (•̀ㅅ •́)
-        //    ＿ノ ヽ ノ＼＿ 
-        //   /　`/ ⌒Ｙ⌒ Ｙ　\
-        //   ( (三ヽ人　 /　 |
-        //   |　ﾉ⌒＼ ￣￣ヽ　ノ
-        //    ヽ＿＿＿＞､＿＿／
-        //      ｜( 王 ﾉ〈 
-        //      / ﾐ`ー―彡 \ 
-        //     |╰        ╯|   
-        //     |    /\    |
-        //     |   /  \   |                    
-        //     |  /    \  |   
-        //      U        U             signed by galilynnn :3  
-        
+//       /| _ ╱|、  
+//      (•̀ㅅ •́)
+//    ＿ノ ヽ ノ＼＿
+//   /　`/ ⌒Ｙ⌒ Ｙ　\
+//   ( (三ヽ人　 /　 |
+//   |　ﾉ⌒＼ ￣￣ヽ　ノ
+//    ヽ＿＿＿＞､＿＿／
+//      ｜( 王 ﾉ〈
+//      / ﾐ`ー―彡 \
+//     |╰        ╯|
+//     |    /\    |
+//     |   /  \   |
+//     |  /    \  |
+//      U        U             signed by galilynnn :3  
+

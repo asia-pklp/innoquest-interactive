@@ -4,7 +4,9 @@ import { createClient } from '@/lib/supabase/server'
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()
-    const gameId = '00000000-0000-0000-0000-000000000001'
+    const gameId =
+      request.nextUrl.searchParams.get('gameId') ??
+      '00000000-0000-0000-0000-000000000001'
 
     const { data: settings } = await supabase
       .from('game_settings')
@@ -14,9 +16,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(settings)
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

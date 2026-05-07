@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import AdminHeader from '@/components/admin/admin-header'
 
@@ -41,10 +41,11 @@ interface TeamSummary {
   total_balance: number
 }
 
-export default function GameOverviewPage() {
+function GameOverviewContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
-  const gameId = '00000000-0000-0000-0000-000000000001'
+  const gameId = searchParams.get('gameId') ?? '00000000-0000-0000-0000-000000000001'
   const [loading, setLoading] = useState(true)
   const [investmentConfig, setInvestmentConfig] = useState<InvestmentConfig | null>(null)
   const [rndTierConfig, setRndTierConfig] = useState<RndTierConfig | null>(null)
@@ -416,6 +417,14 @@ export default function GameOverviewPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function GameOverviewPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p className="text-muted-foreground">Loading...</p></div>}>
+      <GameOverviewContent />
+    </Suspense>
   )
 }
 

@@ -166,7 +166,8 @@ export default function StudentGameplay() {
           // Check if game hasn't started yet
           if (settingsData.game_status !== 'active' && settingsData.game_status !== 'completed') {
             console.log('⚠️ Game not active/completed, redirecting to lobby. Status:', settingsData.game_status)
-            window.location.href = '/student/lobby'
+            const gt = sessionStorage.getItem('game_type') ?? 'startup_simulation'
+            window.location.href = `/student/${gt}/lobby`
             return
           }
           
@@ -441,7 +442,8 @@ export default function StudentGameplay() {
           
           if (newSettings.game_status === 'completed') {
             console.log('🏁 Game completed, redirecting to results')
-            window.location.href = '/student/result'
+            const gt = sessionStorage.getItem('game_type') ?? 'startup_simulation'
+            window.location.href = `/student/${gt}/result`
           } else if (newSettings.current_week !== gameSettings.current_week || newSettings.week_start_time !== gameSettings.week_start_time) {
             console.log(`Week changed from ${gameSettings.current_week} to ${newSettings.current_week} or timer reset`)
             

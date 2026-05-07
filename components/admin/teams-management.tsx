@@ -26,6 +26,7 @@ export default function TeamsManagement({ gameId }: TeamsManagementProps) {
   const [teamSlots, setTeamSlots] = useState<TeamSlot[]>([])
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState<Array<{ id: string; name: string }>>([])
+  const [gameType, setGameType] = useState<string>('startup_simulation')
 
   useEffect(() => {
     loadProducts()
@@ -44,15 +45,15 @@ export default function TeamsManagement({ gameId }: TeamsManagementProps) {
   }
 
   const loadTeamsAndSettings = async () => {
-    // Load game settings for max teams and initial capital
     const { data: settings } = await supabase
       .from('game_settings')
-      .select('max_teams, initial_capital')
+      .select('max_teams, initial_capital, game_type')
       .eq('game_id', gameId)
       .single()
 
     const maxTeamsCount = settings?.max_teams || 10
     const initialCapitalValue = settings?.initial_capital || 500000
+    setGameType(settings?.game_type ?? 'startup_simulation')
     
     // Validate max teams is between 1 and 10
     if (maxTeamsCount > 10) {
@@ -243,7 +244,9 @@ export default function TeamsManagement({ gameId }: TeamsManagementProps) {
               <th className="text-left py-3 px-4 font-semibold text-gray-900">ID</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-900">Username</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-900">Password</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-900">Assigned Product</th>
+              {gameType !== 'price_war' && (
+                <th className="text-left py-3 px-4 font-semibold text-gray-900">Assigned Product</th>
+              )}
               <th className="text-center py-3 px-4 font-semibold text-gray-900">Status</th>
               <th className="text-center py-3 px-4 font-semibold text-gray-900">Edit/Confirm</th>
             </tr>
@@ -284,21 +287,23 @@ export default function TeamsManagement({ gameId }: TeamsManagementProps) {
                     </span>
                   )}
                 </td>
-                <td className="py-3 px-4">
-                  <select
-                    value={slot.assignedProduct || ''}
-                    onChange={(e) => handleProductChange(index, e.target.value || null)}
-                    disabled={!slot.isEditing && !slot.exists}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#E63946] bg-white disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    <option value="">Not Assigned</option>
-                    {products.map((product) => (
-                      <option key={product.id} value={product.id}>
-                        {product.name}
-                      </option>
-                    ))}
-                  </select>
-                </td>
+                {gameType !== 'price_war' && (
+                  <td className="py-3 px-4">
+                    <select
+                      value={slot.assignedProduct || ''}
+                      onChange={(e) => handleProductChange(index, e.target.value || null)}
+                      disabled={!slot.isEditing && !slot.exists}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#E63946] bg-white disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      <option value="">Not Assigned</option>
+                      {products.map((product) => (
+                        <option key={product.id} value={product.id}>
+                          {product.name}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                )}
                 <td className="py-3 px-4 text-center">
                   {slot.exists ? (
                     (() => {

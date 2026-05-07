@@ -12,11 +12,14 @@ interface TeamWithStats {
   bonus_multiplier_pending: number | null
 }
 
-export default function LeaderboardView() {
+interface LeaderboardViewProps {
+  gameId?: string
+}
+
+export default function LeaderboardView({ gameId = '00000000-0000-0000-0000-000000000001' }: LeaderboardViewProps) {
   const [teams, setTeams] = useState<TeamWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
-  const gameId = '00000000-0000-0000-0000-000000000001'
 
   useEffect(() => {
     loadLeaderboard()
