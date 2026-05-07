@@ -19,17 +19,33 @@ export default function StudentLoginPage() {
     try {
       const supabase = createClient()
 
-      const { data: team, error: teamError } = await supabase
+      const { data: teams, error: teamError } = await supabase
         .from('teams')
-        .select('team_id, team_name, game_id, username, password_hash, game_settings!inner(game_status)')
+        .select('team_id, team_name, game_id, username, password_hash')
         .eq('username', username)
         .eq('password_hash', password)
-        .single()
 
-      if (teamError || !team) {
+      if (teamError || !teams || teams.length === 0) {
         setError('Invalid username or password. Please check your credentials.')
         setLoading(false)
         return
+      }
+
+      // If multiple matches (same username across games), pick the one whose game still exists
+      let team = teams[0]
+      if (teams.length > 1) {
+        const { data: activeGames } = await supabase
+          .from('game_settings')
+          .select('game_id')
+          .in('game_id', teams.map((t) => t.game_id))
+        const activeIds = new Set((activeGames ?? []).map((g) => g.game_id))
+        const active = teams.find((t) => activeIds.has(t.game_id))
+        if (!active) {
+          setError('Invalid username or password. Please check your credentials.')
+          setLoading(false)
+          return
+        }
+        team = active
       }
 
       await supabase
