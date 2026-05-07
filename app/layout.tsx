@@ -12,9 +12,14 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'Backend Startup Sim',
-  description: 'Business simulation game for entrepreneurship education',
+  title: 'InnoQuest Labs Interactive',
+  description: 'Step into the arena. Compete in real-time business simulations, make high-stakes decisions, and see how your strategy stacks up against the competition.',
   generator: 'v0.app',
+  openGraph: {
+    title: 'InnoQuest Labs Interactive',
+    description: 'Step into the arena. Compete in real-time business simulations, make high-stakes decisions, and see how your strategy stacks up against the competition.',
+    type: 'website',
+  },
   icons: {
     icon: [
       {
