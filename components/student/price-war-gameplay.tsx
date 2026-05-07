@@ -63,6 +63,11 @@ export default function PriceWarGameplay() {
       .eq('game_id', gid)
       .single()
 
+    if (settings?.game_status === 'summary') {
+      window.location.href = `/student/price_war/result`
+      return
+    }
+
     setGameSettings(settings)
     const cfg: GameConfig = {
       total_customers: settings?.game_config?.total_customers ?? 10,

@@ -31,6 +31,7 @@ export default function PriceWarRoundControl({ gameId }: RoundControlProps) {
   const [submissions, setSubmissions] = useState<TeamSubmission[]>([])
   const [loading, setLoading] = useState(true)
   const [advancing, setAdvancing] = useState(false)
+  const [broadcasting, setBroadcasting] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [activeScenario, setActiveScenario] = useState<ActiveScenario | null>(null)
   const [upcomingScenario, setUpcomingScenario] = useState<(ActiveScenario & { round_number: number }) | null>(null)
@@ -110,6 +111,23 @@ export default function PriceWarRoundControl({ gameId }: RoundControlProps) {
 
     return () => { supabase.removeChannel(channel) }
   }, [gameId])
+
+  const handleBroadcastSummary = async () => {
+    setBroadcasting(true)
+    setMessage(null)
+    const supabase = createClient()
+    const { error } = await supabase
+      .from('game_settings')
+      .update({ game_status: 'summary' })
+      .eq('game_id', gameId)
+    if (error) {
+      setMessage(`Error: ${error.message}`)
+    } else {
+      setMessage('Summary screen broadcasted to all students.')
+      await load()
+    }
+    setBroadcasting(false)
+  }
 
   const handleAdvanceRound = async () => {
     setAdvancing(true)
@@ -280,12 +298,28 @@ export default function PriceWarRoundControl({ gameId }: RoundControlProps) {
         </table>
       </div>
 
-      {gameStatus === 'completed' && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
-          <p className="font-semibold text-green-800">Game Completed!</p>
-          <p className="text-sm text-green-700 mt-1">
-            Winner: {sortedByProfit[0]?.team_name ?? 'N/A'} with ${Number(sortedByProfit[0]?.cumulative_profit ?? 0).toLocaleString()} cumulative profit
-          </p>
+      {(gameStatus === 'completed' || gameStatus === 'summary') && (
+        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <p className="font-semibold text-green-800">Game Completed!</p>
+              <p className="text-sm text-green-700 mt-1">
+                Winner: {sortedByProfit[0]?.team_name ?? 'N/A'} with ${Number(sortedByProfit[0]?.cumulative_profit ?? 0).toLocaleString()} cumulative profit
+              </p>
+            </div>
+            {gameStatus === 'completed' && (
+              <button
+                onClick={handleBroadcastSummary}
+                disabled={broadcasting}
+                className="px-5 py-2.5 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors text-sm"
+              >
+                {broadcasting ? 'Broadcasting...' : '📺 Broadcast Summary to Students'}
+              </button>
+            )}
+            {gameStatus === 'summary' && (
+              <span className="text-sm text-green-700 font-medium">✓ Summary screen is live for students</span>
+            )}
+          </div>
         </div>
       )}
     </div>

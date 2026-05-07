@@ -19,6 +19,8 @@ export default function StudentLobby() {
 
   const [players, setPlayers] = useState<PlayerStatus[]>([])
   const [teamName, setTeamName] = useState('')
+  const [currentRound, setCurrentRound] = useState<number | null>(null)
+  const [totalRounds, setTotalRounds] = useState<number | null>(null)
 
   useEffect(() => {
     const storedTeamName = sessionStorage.getItem('team_name')
@@ -32,7 +34,7 @@ export default function StudentLobby() {
 
     setTeamName(storedTeamName || 'Player')
 
-    // Subscribe to game_settings changes to detect game start
+    // Subscribe to game_settings changes to detect game start and round updates
     const gameSettingsChannel = supabase
       .channel(`lobby_game_settings_${storedGameId}`)
       .on(
@@ -42,6 +44,8 @@ export default function StudentLobby() {
           if (payload.new.game_status === 'active') {
             window.location.href = `/student/${gameType}/gameplay`
           }
+          if (payload.new.current_week != null) setCurrentRound(payload.new.current_week)
+          if (payload.new.total_weeks != null) setTotalRounds(payload.new.total_weeks)
         }
       )
       .subscribe()
@@ -103,6 +107,8 @@ export default function StudentLobby() {
         window.location.href = `/student/${gameType}/gameplay`
         return
       }
+      setCurrentRound(settings?.current_week ?? null)
+      setTotalRounds(settings?.total_weeks ?? null)
 
       const { data: teams } = await supabase
         .from('teams')
@@ -166,6 +172,11 @@ export default function StudentLobby() {
             </div>
             <h2 className="text-3xl font-bold text-gray-800 mb-3">Waiting for Admin to Start Game</h2>
             <p className="text-gray-600 text-lg">Please wait while the admin prepares the game...</p>
+            {currentRound != null && totalRounds != null && (
+              <p className="mt-4 text-sm font-semibold text-gray-500 uppercase tracking-widest">
+                Round {currentRound} / {totalRounds}
+              </p>
+            )}
           </div>
         </div>
 
