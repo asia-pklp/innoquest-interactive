@@ -25,7 +25,7 @@ const DEFAULT_INVESTMENT_CONFIG = {
 export const GAME_REGISTRY: Record<string, GameDefinition> = {
   startup_simulation: {
     id: 'startup_simulation',
-    name: 'Startup Simulation',
+    name: 'Startup Odyssey',
     description: 'Multi-week business simulation where teams run startups and make weekly decisions on pricing, R&D investment, and analytics.',
     icon: '🚀',
     defaultSettings: {

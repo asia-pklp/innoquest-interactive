@@ -69,11 +69,24 @@ export default function AdminDashboard() {
     setLoading(false)
   }
 
-  const handleDeleteGame = async (gameId: string, gameName: string) => {
+  const handleKillGame = async (gameId: string, gameName: string) => {
+    if (!window.confirm(`Force-end "${gameName}"? This will set the game to completed.`)) return
+    const supabase = createClient()
+    await supabase.from('game_settings').update({ game_status: 'completed' }).eq('game_id', gameId)
+    setGames((prev) => prev.map((g) => g.game_id === gameId ? { ...g, game_status: 'completed' } : g))
+  }
+
+  const handleDeleteGame = async (gameId: string, gameName: string, gameType: string) => {
     if (!window.confirm(`Delete "${gameName}" permanently? This cannot be undone.`)) return
     setDeletingId(gameId)
     const supabase = createClient()
-    await supabase.from('weekly_results').delete().eq('game_id', gameId)
+    if (gameType === 'price_war') {
+      await supabase.from('price_war_results').delete().eq('game_id', gameId)
+      await supabase.from('price_war_scenarios').delete().eq('game_id', gameId)
+    } else {
+      await supabase.from('weekly_results').delete().eq('game_id', gameId)
+      await supabase.from('customer_purchase_probabilities').delete().eq('game_id', gameId)
+    }
     await supabase.from('teams').delete().eq('game_id', gameId)
     await supabase.from('game_settings').delete().eq('game_id', gameId)
     setGames((prev) => prev.filter((g) => g.game_id !== gameId))
@@ -160,16 +173,23 @@ export default function AdminDashboard() {
                   >
                     📊
                   </button>
-                  {isCompleted && (
+                  {!isCompleted && (
                     <button
-                      onClick={() => handleDeleteGame(game.game_id, game.game_name)}
-                      disabled={isDeleting}
-                      title="Delete this game permanently"
-                      className="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
+                      onClick={() => handleKillGame(game.game_id, game.game_name)}
+                      title="Force-end this game"
+                      className="py-2 px-3 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-lg text-sm font-semibold transition-all"
                     >
-                      {isDeleting ? '…' : '🗑'}
+                      ⏹
                     </button>
                   )}
+                  <button
+                    onClick={() => handleDeleteGame(game.game_id, game.game_name, game.game_type)}
+                    disabled={isDeleting}
+                    title="Delete this game permanently"
+                    className="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
+                  >
+                    {isDeleting ? '…' : '🗑'}
+                  </button>
                 </div>
               </div>
             )
